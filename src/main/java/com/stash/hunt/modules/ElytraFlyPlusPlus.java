@@ -315,11 +315,6 @@ public class ElytraFlyPlusPlus extends Module {
 
         if (enabled()) mc.player.setSprinting(true);
 
-        if (enabled() && motionYBoost.get() && mc.player.getVelocity().y > 0)
-        {
-            mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
-        }
-
         if (bounce.get())
         {
             if (tempPath != null && mc.player.getBlockPos().getSquaredDistance(tempPath) < 500)
@@ -395,6 +390,12 @@ public class ElytraFlyPlusPlus extends Module {
                 // keep jumping
                 paused = false;
                 if (!enabled()) return;
+
+                if (enabled() && motionYBoost.get() && mc.player.getVelocity().y > 0)
+                {
+                    mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
+                }
+                
                 if (mc.player.isOnGround())
                 {
                     mc.player.jump();
