@@ -1,11 +1,11 @@
 # jeff mod (For minecraft 1.21.1 and 1.21.4)
 #### Make an issue or DM me on discord `0x658` with any questions (Check the FAQ and the first)
+#### Pull Requests are welcome, please make them to the 1.21.1 branch.
 #### Check the [Wiki](https://github.com/miles352/meteor-stashhunting-addon/wiki) for a full list of features and options.
 ## Features
 - ElytraFlyPlusPlus
   - Has a bounce mode with a baritone obstacle passer for highways.
-  - Does not use durability after it drains to 1, but you cannot use fireworks at 1 durability.
-  - Bounce in 1x2 tunnels can reach up to 130bps. (Make sure to use ViaFabric 1.20.4 if having issues)
+  - Motion Y Boost mode can go up to 105 bps.
 - TrailFollower (Credit to [WarriorLost](https://github.com/warriorlost) for creating the original TrailFollower this was based off)
   - Follows trails in all dimensions using either pitch40 or baritone. May break on path splits or other cases.
 - BetterStashFinder
