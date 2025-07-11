@@ -52,11 +52,27 @@ public class ElytraFlyPlusPlus extends Module {
         .build()
     );
 
+    private final Setting<Boolean> autoAdjustPitch = sgGeneral.add(new BoolSetting.Builder()
+        .name("Auto Adjust Pitch")
+        .description("Whether to auto adjust your pitch to stay at a set speed")
+        .defaultValue(false)
+        .visible(() -> bounce.get() && lockPitch.get())
+        .build()
+    );
+
+    private final Setting<Double> speed = sgGeneral.add(new DoubleSetting.Builder()
+        .name("Speed")
+        .description("The speed in blocks per second to keep you at.")
+        .defaultValue(100.0)
+        .visible(() -> bounce.get() && lockPitch.get() && autoAdjustPitch.get())
+        .build()
+    );
+
     private final Setting<Double> pitch = sgGeneral.add(new DoubleSetting.Builder()
         .name("Pitch")
         .description("The pitch to set when bounce is enabled.")
         .defaultValue(90.0)
-        .visible(() -> bounce.get() && lockPitch.get())
+        .visible(() -> bounce.get() && lockPitch.get() && !autoAdjustPitch.get())
         .build()
     );
 
@@ -391,7 +407,15 @@ public class ElytraFlyPlusPlus extends Module {
                 }
                 if (lockPitch.get())
                 {
-                    mc.player.setPitch(pitch.get().floatValue());
+                    if (autoAdjustPitch.get())
+                    {
+                        double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
+                        mc.player.setPitch((float) Math.min(90, Math.max(-90, (speed.get() - playerSpeed) * 5)));
+                    }
+                    else
+                    {
+                        mc.player.setPitch(pitch.get().floatValue());
+                    }
                 }
             }
         }
