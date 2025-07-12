@@ -108,14 +108,6 @@ public class ElytraFlyPlusPlus extends Module {
         .build()
     );
 
-    private final Setting<Boolean> motionYBoost = sgGeneral.add(new BoolSetting.Builder()
-        .name("Motion Y Boost")
-        .description("Greatly increases speed by cancelling Y momentum.")
-        .defaultValue(false)
-        .visible(bounce::get)
-        .build()
-    );
-
     private final Setting<Boolean> highwayObstaclePasser = sgObstaclePasser.add(new BoolSetting.Builder()
         .name("Highway Obstacle Passer")
         .description("Uses baritone to pass obstacles.")
