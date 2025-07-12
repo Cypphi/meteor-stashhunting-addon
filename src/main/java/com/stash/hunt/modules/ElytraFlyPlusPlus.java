@@ -44,6 +44,14 @@ public class ElytraFlyPlusPlus extends Module {
         .build()
     );
 
+    private final Setting<Boolean> motionYBoost = sgGeneral.add(new BoolSetting.Builder()
+        .name("Motion Y Boost")
+        .description("Greatly increases speed by cancelling Y momentum.")
+        .defaultValue(false)
+        .visible(bounce::get)
+        .build()
+    );
+
     private final Setting<Boolean> lockPitch = sgGeneral.add(new BoolSetting.Builder()
         .name("Lock Pitch")
         .description("Whether to lock your pitch when bounce is enabled.")
@@ -391,7 +399,8 @@ public class ElytraFlyPlusPlus extends Module {
                 paused = false;
                 if (!enabled()) return;
 
-                if (enabled() && motionYBoost.get() && mc.player.getVelocity().y > 0)
+                double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
+                if (enabled() && motionYBoost.get() && mc.player.getVelocity().y > 0 && playerSpeed < speed.get())
                 {
                     mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
                 }
@@ -410,7 +419,6 @@ public class ElytraFlyPlusPlus extends Module {
                 {
                     if (autoAdjustPitch.get())
                     {
-                        double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
                         mc.player.setPitch((float) Math.min(90, Math.max(-90, (speed.get() - playerSpeed) * 5)));
                     }
                     else
