@@ -2,12 +2,16 @@ package com.stash.hunt.modules;
 
 import com.stash.hunt.Addon;
 import com.stash.hunt.Utils;
+
 import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.settings.BoolSetting;
+import meteordevelopment.meteorclient.settings.IntSetting;
+import meteordevelopment.meteorclient.settings.Setting;
+import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.orbit.EventHandler;
-import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.meteorclient.utils.player.FindItemResult;
-import meteordevelopment.meteorclient.settings.*;
+import meteordevelopment.meteorclient.utils.player.InvUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.item.Items;
 
 public class AFKVanillaFly extends Module {
@@ -30,6 +34,23 @@ public class AFKVanillaFly extends Module {
         .build()
     );
 
+    private final Setting<Boolean> useManualY = sgGeneral.add(new BoolSetting.Builder()
+        .name("Use Manual Y Level")
+        .description("Use a manually set Y level instead of the Y level when activated.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Integer> manualYLevel = sgGeneral.add(new IntSetting.Builder()
+        .name("Manual Y Level")
+        .description("The Y level to maintain when using manual Y level.")
+        .defaultValue(256)
+        .sliderRange(-64, 320)
+        .visible(useManualY::get)
+        .onChanged(val -> yTarget = val)
+        .build()
+    );
+
     @Override
     public void onActivate() {
         launched = false;
@@ -47,21 +68,28 @@ public class AFKVanillaFly extends Module {
 
         if (mc.player.isGliding()) {
             if (yTarget == -1 || !launched) {
-                yTarget = currentY;
+                if (useManualY.get()) {
+                    yTarget = manualYLevel.get();
+                } else {
+                    yTarget = currentY;
+                }
                 launched = true;
             }
 
             // will prevent from flying straight down into the ground - adjust y range if player moves vertical
-            double yDiffFromLock = currentY - yTarget;
-            if (Math.abs(yDiffFromLock) > 10.0) {
-                yTarget = currentY; // reset the current y-level to maintain
-                info("Y-lock reset due to altitude deviation.");
+            // but only if not using manual Y level
+            if (!useManualY.get()) {
+                double yDiffFromLock = currentY - yTarget;
+                if (Math.abs(yDiffFromLock) > 10.0) {
+                    yTarget = currentY; // reset the current y-level to maintain
+                    info("Y-lock reset due to altitude deviation.");
+                }
             }
 
             double yDiff = currentY - yTarget;
 
             if (Math.abs(yDiff) > 10.0) {
-                targetPitch = (float) (-Math.atan2(yDiff, 100) * (180 / Math.PI));
+                targetPitch = (float) (Math.atan2(yDiff, 100) * (180 / Math.PI));
             } else if (yDiff > 2.0) {
                 targetPitch = 10f;
             } else if (yDiff < -2.0) {
@@ -88,18 +116,15 @@ public class AFKVanillaFly extends Module {
         }
     }
 
-
     public void resetYLock() {
         yTarget = -1;
         launched = false;
     }
 
-
     @EventHandler
     private void onTick(TickEvent.Pre event) {
         tickFlyLogic();
     }
-
 
     private void tryUseFirework() {
         FindItemResult hotbar = InvUtils.findInHotbar(Items.FIREWORK_ROCKET);
