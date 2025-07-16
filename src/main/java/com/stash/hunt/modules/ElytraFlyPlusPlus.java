@@ -4,7 +4,6 @@ import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.GoalBlock;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import meteordevelopment.meteorclient.events.entity.player.InteractItemEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.ChunkDataEvent;
 import meteordevelopment.meteorclient.events.world.PlaySoundEvent;
@@ -19,17 +18,14 @@ import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.*;
-import net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.CloseScreenS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerSpawnPositionS2CPacket;
 
 import com.stash.hunt.Addon;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -220,6 +216,10 @@ public class ElytraFlyPlusPlus extends Module {
         {
             onActivate();
         }
+        else if (event.packet instanceof CloseScreenS2CPacket)
+        {
+            event.cancel();
+        }
     }
 
     @Override
@@ -397,15 +397,18 @@ public class ElytraFlyPlusPlus extends Module {
                 paused = false;
                 if (!enabled()) return;
 
-                double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
-                if (motionYBoost.get() && mc.player.getVelocity().y > 0 && playerSpeed < speed.get())
+                if (!fakeFly.get())
                 {
-                    mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
-                }
+                    double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
+                    if (motionYBoost.get() && mc.player.getVelocity().y > 0 && playerSpeed < speed.get())
+                    {
+                        mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
+                    }
 
-                if (mc.player.isOnGround())
-                {
-                    mc.player.jump();
+                    if (mc.player.isOnGround())
+                    {
+                        mc.player.jump();
+                    }
                 }
 
                 // set yaw and pitch
@@ -445,13 +448,21 @@ public class ElytraFlyPlusPlus extends Module {
 
         swapToItem(itemResult.slot());
 
+        double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
+        if (bounce.get() && motionYBoost.get() && mc.player.getVelocity().y > 0 && playerSpeed < speed.get())
+        {
+            mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
+        }
+
         sendStartFlyingPacket();
+
+        if (bounce.get() && mc.player.isOnGround())
+        {
+            mc.player.jump();
+        }
 
         swapToItem(itemResult.slot());
 
-        if (Utils.canOpenGui()) {
-            mc.player.networkHandler.sendPacket(new CloseHandledScreenC2SPacket(mc.player.currentScreenHandler.syncId));
-        }
     }
 
     @EventHandler
@@ -460,6 +471,7 @@ public class ElytraFlyPlusPlus extends Module {
         List<Identifier> armorEquipSounds = List.of(
             Identifier.of("minecraft:item.armor.equip_generic"),
             Identifier.of("minecraft:item.armor.equip_netherite"),
+            Identifier.of("minecraft:item.armor.equip_elytra"),
             Identifier.of("minecraft:item.armor.equip_diamond"),
             Identifier.of("minecraft:item.armor.equip_gold"),
             Identifier.of("minecraft:item.armor.equip_iron"),
