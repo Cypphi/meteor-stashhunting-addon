@@ -4,20 +4,24 @@ import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.GoalBlock;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.ChunkDataEvent;
 import meteordevelopment.meteorclient.events.world.PlaySoundEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.mixininterface.IVec3d;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.player.ChestSwap;
+import meteordevelopment.meteorclient.systems.modules.world.Timer;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.player.FindItemResult;
 import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.MovementType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.*;
@@ -59,7 +63,7 @@ public class ElytraFlyPlusPlus extends Module {
         .name("Speed")
         .description("The speed in blocks per second to keep you at.")
         .defaultValue(100.0)
-        .range(10, 105)
+        .range(10, 250)
         .visible(() -> bounce.get() && motionYBoost.get())
         .build()
     );
@@ -233,6 +237,7 @@ public class ElytraFlyPlusPlus extends Module {
         paused = false;
         waitingForChunksToLoad = false;
         elytraToggled = false;
+        lastPos = null;
 
         // I don't know any other way to fix this stupid shit
         if (bounce.get() && mc.player.getPos().multiply(1, 0, 1).length() >= 100)
@@ -270,6 +275,34 @@ public class ElytraFlyPlusPlus extends Module {
                 }
             }
         }
+    }
+
+    private Vec3d lastPos;
+
+    @EventHandler
+    private void onPlayerMove(PlayerMoveEvent event) {
+        if (event.type != MovementType.SELF || !enabled() || !motionYBoost.get()) return;
+
+        if (lastPos != null)
+        {
+            double speedBps = mc.player.getPos().subtract(lastPos).multiply(20, 0, 20).length();
+
+            Timer timer = Modules.get().get(Timer.class);
+            if (timer.isActive()) {
+                speedBps *= timer.getMultiplier();
+            }
+
+            if (mc.player.isOnGround() && mc.player.isSprinting() && speedBps < speed.get())
+            {
+                if (speedBps > 20)
+                {
+                    ((IVec3d) event.movement).setY(0.0);
+                }
+                mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
+            }
+        }
+
+        lastPos = mc.player.getPos();
     }
 
     @Override
@@ -399,12 +432,6 @@ public class ElytraFlyPlusPlus extends Module {
 
                 if (!fakeFly.get())
                 {
-                    double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
-                    if (motionYBoost.get() && mc.player.getVelocity().y > 0 && playerSpeed < speed.get())
-                    {
-                        mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
-                    }
-
                     if (mc.player.isOnGround())
                     {
                         mc.player.jump();
@@ -447,12 +474,6 @@ public class ElytraFlyPlusPlus extends Module {
         if (!itemResult.found()) return;
 
         swapToItem(itemResult.slot());
-
-        double playerSpeed = Utils.getPlayerSpeed().multiply(1, 0, 1).length();
-        if (bounce.get() && motionYBoost.get() && mc.player.getVelocity().y > 0 && playerSpeed < speed.get())
-        {
-            mc.player.setVelocity(mc.player.getVelocity().x, 0.0, mc.player.getVelocity().z);
-        }
 
         sendStartFlyingPacket();
 
@@ -526,7 +547,7 @@ public class ElytraFlyPlusPlus extends Module {
     @EventHandler
     private void onChunkData(ChunkDataEvent event)
     {
-        if (!avoidPortalTraps.get()) return;
+        if (!avoidPortalTraps.get() || !highwayObstaclePasser.get()) return;
         ChunkPos pos = event.chunk().getPos();
 
         BlockPos centerPos = pos.getCenterAtY(targetY.get());
