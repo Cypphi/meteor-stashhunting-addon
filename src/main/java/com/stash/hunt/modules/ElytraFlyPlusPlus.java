@@ -63,7 +63,7 @@ public class ElytraFlyPlusPlus extends Module {
         .name("Speed")
         .description("The speed in blocks per second to keep you at.")
         .defaultValue(100.0)
-        .range(10, 250)
+        .range(20, 250)
         .visible(() -> bounce.get() && motionYBoost.get())
         .build()
     );
@@ -213,6 +213,9 @@ public class ElytraFlyPlusPlus extends Module {
 
     private boolean elytraToggled = false;
 
+    private Vec3d lastUnstuckPos;
+    private int stuckTimer = 0;
+
     @EventHandler
     private void onReceivePacket(PacketEvent.Receive event)
     {
@@ -237,7 +240,9 @@ public class ElytraFlyPlusPlus extends Module {
         paused = false;
         waitingForChunksToLoad = false;
         elytraToggled = false;
-        lastPos = null;
+        lastPos = mc.player.getPos();
+        lastUnstuckPos = mc.player.getPos();
+        stuckTimer = 0;
 
         // I don't know any other way to fix this stupid shit
         if (bounce.get() && mc.player.getPos().multiply(1, 0, 1).length() >= 100)
@@ -281,7 +286,7 @@ public class ElytraFlyPlusPlus extends Module {
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
-        if (event.type != MovementType.SELF || !enabled() || !motionYBoost.get()) return;
+        if (mc.player == null || event.type != MovementType.SELF || !enabled() || !motionYBoost.get() || !bounce.get()) return;
 
         if (lastPos != null)
         {
@@ -375,10 +380,21 @@ public class ElytraFlyPlusPlus extends Module {
                 return;
             }
 
+            if (mc.player.squaredDistanceTo(lastUnstuckPos) < 5)
+            {
+                stuckTimer++;
+            }
+            else
+            {
+                stuckTimer = 0;
+                lastUnstuckPos = mc.player.getPos();
+            }
+
             if (highwayObstaclePasser.get() && mc.player.getPos().length() > 100 && // > 100 check needed bc server sends queue coordinates when joining in first tick causing goal coordinates to be set to (0, 0)
                 (mc.player.getY() < targetY.get() || mc.player.getY() > targetY.get() + 2 || mc.player.horizontalCollision) // collisions / out of highway
                 || (portalTrap != null && portalTrap.getSquaredDistance(mc.player.getBlockPos()) < portalAvoidDistance.get() * portalAvoidDistance.get()) // portal trap detection
-                || waitingForChunksToLoad) // waiting for chunks to load
+                || waitingForChunksToLoad
+                || stuckTimer > 100) // waiting for chunks to load
             {
                 waitingForChunksToLoad = false;
                 paused = true;
