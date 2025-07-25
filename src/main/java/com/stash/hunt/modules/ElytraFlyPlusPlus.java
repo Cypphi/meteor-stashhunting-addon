@@ -60,7 +60,7 @@ public class ElytraFlyPlusPlus extends Module {
 
     private final Setting<Boolean> tunnelBounce = sgGeneral.add(new BoolSetting.Builder()
         .name("Tunnel Bounce")
-        .description("Allows you to bounce in 1x2 tunnels.")
+        .description("Allows you to bounce in 1x2 tunnels. This should not be on if you are not in a tunnel.")
         .defaultValue(false)
         .visible(() -> bounce.get() && motionYBoost.get())
         .build()
@@ -228,7 +228,7 @@ public class ElytraFlyPlusPlus extends Module {
     {
         if (event.packet instanceof PlayerPositionLookS2CPacket packet)
         {
-            onActivate();
+//            onActivate();
         }
         else if (event.packet instanceof CloseScreenS2CPacket)
         {
@@ -401,7 +401,7 @@ public class ElytraFlyPlusPlus extends Module {
                 (mc.player.getY() < targetY.get() || mc.player.getY() > targetY.get() + 2 || mc.player.horizontalCollision) // collisions / out of highway
                 || (portalTrap != null && portalTrap.getSquaredDistance(mc.player.getBlockPos()) < portalAvoidDistance.get() * portalAvoidDistance.get()) // portal trap detection
                 || waitingForChunksToLoad // waiting for chunks to load
-                || stuckTimer > 100)
+                || stuckTimer > 30)
             {
                 waitingForChunksToLoad = false;
                 paused = true;
