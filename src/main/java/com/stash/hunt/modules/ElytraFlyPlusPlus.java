@@ -387,7 +387,7 @@ public class ElytraFlyPlusPlus extends Module {
                 return;
             }
 
-            if (mc.player.squaredDistanceTo(lastUnstuckPos) < 5)
+            if (mc.player.squaredDistanceTo(lastUnstuckPos) < 25)
             {
                 stuckTimer++;
             }
