@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.lenni0451.lambdaevents.EventHandler;
 //import meteordevelopment.orbit.EventHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import xaero.common.minimap.waypoints.Waypoint;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -71,6 +73,13 @@ public class BetterStashFinder extends Module
         .name("shulker-instant-hit")
         .description("If a single shulker counts as a stash.")
         .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> ignoreTrialChambers = sgGeneral.add(new BoolSetting.Builder()
+        .name("ignore-trial-chambers")
+        .description("Attempts to ignore trial chambers, but may cause false negatives if someone made their base to look like a trial chamber.")
+        .defaultValue(true)
         .build()
     );
 
@@ -202,6 +211,14 @@ public class BetterStashFinder extends Module
 
         for (BlockEntity blockEntity : event.chunk().getBlockEntities().values()) {
             if (!storageBlocks.get().contains(blockEntity.getType())) continue;
+
+            Block blockUnder = mc.world.getBlockState(blockEntity.getPos().down()).getBlock();
+            if (ignoreTrialChambers.get() && blockUnder.equals(Blocks.WAXED_OXIDIZED_CUT_COPPER) ||
+                blockUnder.equals(Blocks.TUFF_BRICKS) || blockUnder.equals(Blocks.WAXED_COPPER_BLOCK) ||
+                blockUnder.equals(Blocks.WAXED_OXIDIZED_COPPER))
+            {
+                continue;
+            }
 
             if (blockEntity instanceof ChestBlockEntity) chunk.chests++;
             else if (blockEntity instanceof BarrelBlockEntity) chunk.barrels++;
