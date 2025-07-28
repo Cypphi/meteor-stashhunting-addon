@@ -15,6 +15,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.player.ChestSwap;
 import meteordevelopment.meteorclient.systems.modules.world.Timer;
+import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.player.FindItemResult;
 import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.orbit.EventHandler;
@@ -87,6 +88,7 @@ public class ElytraFlyPlusPlus extends Module {
         .name("Pitch")
         .description("The pitch to set when bounce is enabled.")
         .defaultValue(90.0)
+        .sliderRange(-90, 90)
         .visible(() -> bounce.get() && lockPitch.get())
         .build()
     );
@@ -111,6 +113,7 @@ public class ElytraFlyPlusPlus extends Module {
         .name("Yaw")
         .description("The yaw to set when bounce is enabled. This is auto set to the closest 45 deg angle to you unless Use Custom Yaw is enabled.")
         .defaultValue(0.0)
+        .sliderRange(0, 359)
         .visible(() -> bounce.get() && useCustomYaw.get())
         .build()
     );
@@ -401,7 +404,7 @@ public class ElytraFlyPlusPlus extends Module {
                 (mc.player.getY() < targetY.get() || mc.player.getY() > targetY.get() + 2 || mc.player.horizontalCollision) // collisions / out of highway
                 || (portalTrap != null && portalTrap.getSquaredDistance(mc.player.getBlockPos()) < portalAvoidDistance.get() * portalAvoidDistance.get()) // portal trap detection
                 || waitingForChunksToLoad // waiting for chunks to load
-                || stuckTimer > 30)
+                || stuckTimer > 50)
             {
                 waitingForChunksToLoad = false;
                 paused = true;
@@ -455,7 +458,7 @@ public class ElytraFlyPlusPlus extends Module {
 
                 if (!fakeFly.get())
                 {
-                    if (mc.player.isOnGround())
+                    if (mc.player.isOnGround() && (!motionYBoost.get() || Utils.getPlayerSpeed().multiply(1, 0, 1).length() < speed.get()))
                     {
                         mc.player.jump();
                     }
@@ -500,7 +503,7 @@ public class ElytraFlyPlusPlus extends Module {
 
         sendStartFlyingPacket();
 
-        if (bounce.get() && mc.player.isOnGround())
+        if (bounce.get() && mc.player.isOnGround() && (!motionYBoost.get() || Utils.getPlayerSpeed().multiply(1, 0, 1).length() < speed.get()))
         {
             mc.player.jump();
         }
