@@ -401,10 +401,10 @@ public class ElytraFlyPlusPlus extends Module {
             }
 
             if (highwayObstaclePasser.get() && mc.player.getPos().length() > 100 && // > 100 check needed bc server sends queue coordinates when joining in first tick causing goal coordinates to be set to (0, 0)
-                (mc.player.getY() < targetY.get() || mc.player.getY() > targetY.get() + 2 || mc.player.horizontalCollision) // collisions / out of highway
+                (mc.player.getY() < targetY.get() || mc.player.getY() > targetY.get() + 2 || mc.player.horizontalCollision // collisions / out of highway
                 || (portalTrap != null && portalTrap.getSquaredDistance(mc.player.getBlockPos()) < portalAvoidDistance.get() * portalAvoidDistance.get()) // portal trap detection
                 || waitingForChunksToLoad // waiting for chunks to load
-                || stuckTimer > 50)
+                || stuckTimer > 50))
             {
                 waitingForChunksToLoad = false;
                 paused = true;
