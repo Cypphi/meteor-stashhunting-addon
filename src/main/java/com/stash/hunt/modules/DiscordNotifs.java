@@ -280,8 +280,9 @@ public class DiscordNotifs extends Module
             message = "[" + timestamp + "] " + message;
         }
         String json = "{\n" +
-            "\"content\": \"```" + message + "```\"\n" +
-            "}";
+            "\"embeds\": [{" +
+                "\"description\": \"" + message + "\"" +
+            "}]}";
         // use threads so the game doesnt lag when sending a ton of webhooks
         new Thread(() -> sendWebhook(webhookURL.get(), json, null)).start();
     }
