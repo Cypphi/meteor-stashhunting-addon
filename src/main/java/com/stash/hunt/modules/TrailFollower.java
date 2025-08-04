@@ -664,7 +664,6 @@ public class TrailFollower extends Module
                 Vec3d positionVec = averagePos.subtract(mc.player.getPos()).normalize();
                 Vec3d targetPos = mc.player.getPos().add(positionVec.multiply(10));
                 targetYaw = Rotations.getYaw(targetPos);
-                info("Setting yaw to " + targetYaw);
             } else {
                 Vec3d lastTrailPoint = trail.getLast();
                 targetYaw = Rotations.getYaw(lastTrailPoint);

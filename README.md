@@ -2,6 +2,7 @@
 #### Make an issue or DM me on discord `0x658` with any questions (Check the FAQ first)
 #### Pull Requests are welcome, please make them to the 1.21.1 branch.
 #### Check the [Wiki](https://github.com/miles352/meteor-stashhunting-addon/wiki) for a full list of features and options.
+##### I do not plan to update to 1.21.5 for the time being, but if you need that version you can try opening the 1.21.4 jar with any zip program and opening the fabric.mod.json file and changing the version to 1.21.5.
 ## Features
 - ElytraFlyPlusPlus
   - Has a bounce mode with a baritone obstacle passer for highways, including ring-roads.
