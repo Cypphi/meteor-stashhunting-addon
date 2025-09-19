@@ -30,6 +30,7 @@ import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
 
 import com.stash.hunt.Addon;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.screen.sync.ItemStackHash;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -56,6 +57,14 @@ public class ElytraFlyPlusPlus extends Module {
         .description("Greatly increases speed by cancelling Y momentum.")
         .defaultValue(false)
         .visible(bounce::get)
+        .build()
+    );
+
+    private final Setting<Boolean> onlyWhileColliding = sgGeneral.add(new BoolSetting.Builder()
+        .name("Only While Colliding")
+        .description("Only enables motion y boost if colliding with a wall.")
+        .defaultValue(true)
+        .visible(() -> bounce.get() && motionYBoost.get())
         .build()
     );
 
@@ -103,7 +112,8 @@ public class ElytraFlyPlusPlus extends Module {
 
     private final Setting<Boolean> useCustomYaw = sgGeneral.add(new BoolSetting.Builder()
         .name("Use Custom Yaw")
-        .description("Enable this if you want to use a yaw that isn't a factor of 45.")
+        .description("Enable this if you want to use a yaw that isn't a factor of 45. WARNING: This effects the baritone goal for obstacle passer, " +
+            "use the default Rotations module if you only want a different yawlock.")
         .defaultValue(false)
         .visible(bounce::get)
         .build()
@@ -111,7 +121,8 @@ public class ElytraFlyPlusPlus extends Module {
 
     private final Setting<Double> yaw = sgGeneral.add(new DoubleSetting.Builder()
         .name("Yaw")
-        .description("The yaw to set when bounce is enabled. This is auto set to the closest 45 deg angle to you unless Use Custom Yaw is enabled.")
+        .description("The yaw to set when bounce is enabled. This is auto set to the closest 45 deg angle to you unless Use Custom Yaw is enabled. " +
+            "WARNING: This effects the baritone goal for obstacle passer, use the default Rotations module if you only want a different yawlock.")
         .defaultValue(0.0)
         .sliderRange(0, 359)
         .visible(() -> bounce.get() && useCustomYaw.get())
@@ -298,6 +309,8 @@ public class ElytraFlyPlusPlus extends Module {
     private void onPlayerMove(PlayerMoveEvent event) {
         if (mc.player == null || event.type != MovementType.SELF || !enabled() || !motionYBoost.get() || !bounce.get()) return;
 
+        if (onlyWhileColliding.get() && !mc.player.horizontalCollision) return;
+
         if (lastPos != null)
         {
             double speedBps = mc.player.getPos().subtract(lastPos).multiply(20, 0, 20).length();
@@ -401,7 +414,7 @@ public class ElytraFlyPlusPlus extends Module {
             }
 
             if (highwayObstaclePasser.get() && mc.player.getPos().length() > 100 && // > 100 check needed bc server sends queue coordinates when joining in first tick causing goal coordinates to be set to (0, 0)
-                (mc.player.getY() < targetY.get() || mc.player.getY() > targetY.get() + 2 || mc.player.horizontalCollision // collisions / out of highway
+                (mc.player.getY() < targetY.get() || mc.player.getY() > targetY.get() + 2 || (mc.player.horizontalCollision && !mc.player.collidedSoftly) // collisions / out of highway
                 || (portalTrap != null && portalTrap.getSquaredDistance(mc.player.getBlockPos()) < portalAvoidDistance.get() * portalAvoidDistance.get()) // portal trap detection
                 || waitingForChunksToLoad // waiting for chunks to load
                 || stuckTimer > 50))
@@ -515,6 +528,7 @@ public class ElytraFlyPlusPlus extends Module {
     @EventHandler
     private void onPlaySound(PlaySoundEvent event)
     {
+        if (!fakeFly.get()) return;
         List<Identifier> armorEquipSounds = List.of(
             Identifier.of("minecraft:item.armor.equip_generic"),
             Identifier.of("minecraft:item.armor.equip_netherite"),
@@ -540,11 +554,11 @@ public class ElytraFlyPlusPlus extends Module {
         ItemStack chestItem = mc.player.getInventory().getStack(38);
         ItemStack hotbarSwapItem = mc.player.getInventory().getStack(slot);
 
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(6, hotbarSwapItem);
-        changedSlots.put(slot + 36, chestItem);
+        Int2ObjectMap<ItemStackHash> changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(6, ItemStackHash.fromItemStack(hotbarSwapItem, mc.getNetworkHandler().method_68823()));
+        changedSlots.put(slot + 36, ItemStackHash.fromItemStack(chestItem, mc.getNetworkHandler().method_68823()));
 
-        sendSwapPacket(changedSlots, slot);
+        sendSwapPacket(changedSlots, (byte)slot);
     }
 
     private void sendStartFlyingPacket() {
@@ -555,18 +569,18 @@ public class ElytraFlyPlusPlus extends Module {
         ));
     }
 
-    private void sendSwapPacket(Int2ObjectMap<ItemStack> changedSlots, int buttonNum) {
+    private void sendSwapPacket(Int2ObjectMap<ItemStackHash> changedSlots, byte buttonNum) {
         int syncId  = mc.player.currentScreenHandler.syncId;
         int stateId = mc.player.currentScreenHandler.getRevision();
 
         mc.player.networkHandler.sendPacket(new ClickSlotC2SPacket(
             syncId,
             stateId,
-            6,                 // slotNum
-            buttonNum,   // the slot number thats being swapped
+            (short) 6,
+            buttonNum,
             SlotActionType.SWAP,
-            new ItemStack(Items.AIR),
-            changedSlots
+            changedSlots,
+            ItemStackHash.EMPTY
         ));
     }
 

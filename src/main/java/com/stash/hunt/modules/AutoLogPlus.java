@@ -1,17 +1,15 @@
 package com.stash.hunt.modules;
 
 import com.stash.hunt.Addon;
-import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
-import meteordevelopment.meteorclient.events.world.ServerConnectBeginEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.misc.AutoReconnect;
+import meteordevelopment.meteorclient.utils.player.SlotUtils;
 import meteordevelopment.meteorclient.utils.world.TickRate;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.item.Items;
-import net.minecraft.network.packet.c2s.play.PickItemFromEntityC2SPacket;
 import net.minecraft.network.packet.s2c.common.DisconnectS2CPacket;
 import net.minecraft.text.Text;
 import net.minecraft.item.ItemStack;
@@ -225,7 +223,7 @@ public class AutoLogPlus extends Module
         {
             for (int i = 0; i < 4; i++)
             {
-                ItemStack armorPiece = mc.player.getInventory().getArmorStack(i);
+                ItemStack armorPiece = mc.player.getInventory().getStack(SlotUtils.ARMOR_START + i);
                 if (ignoreElytra.get() && armorPiece.getItem() == Items.ELYTRA) continue;
                 if (armorPiece.isDamageable())
                 {

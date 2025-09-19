@@ -1,15 +1,16 @@
-# jeff mod (For minecraft 1.21.1 and 1.21.4)
+# jeff mod (For minecraft 1.21.5)
 #### Make an issue or DM me on discord `0x658` with any questions (Check the FAQ first)
-#### Pull Requests are welcome, please make them to the 1.21.1 branch.
+#### Pull Requests are welcome, please make them to the 1.21.5 branch.
 #### Check the [Wiki](https://github.com/miles352/meteor-stashhunting-addon/wiki) for a full list of features and options.
-##### I do not plan to update to 1.21.5 for the time being, but if you need that version you can try opening the 1.21.4 jar with any zip program and opening the fabric.mod.json file and changing the version to 1.21.5.
 ## Features
 - ElytraFlyPlusPlus
   - Has a bounce mode with a baritone obstacle passer for highways, including ring-roads.
-  - Motion Y Boost mode can go up to 105 bps.
-  - Fake fly option allows you to fly with a chestplate on to minimize lost durability.
+  - Motion Y Boost mode can go up to 200 bps. (1.20.4 ViaVersion required for 2b2t, and you must be touching a wall)
+  - Fake fly option allows you to fly with a chestplate on to minimize lost durability. (Does not work on 2b2t)
 - TrailFollower (Credit to [WarriorLost](https://github.com/warriorlost) for creating the original TrailFollower this was based off)
   - Follows trails in all dimensions using either pitch40 or baritone. May break on path splits or other cases.
+- TrailMaker
+  - Saves the chunks you plot using the xaeros map, and adjusts your yaw to face each chunk in order as you go to each one.
 - BetterStashFinder
   - Pretty much the same as meteors stash finder except some extra features:
     - It doesn't look for stashes in unloaded chunks

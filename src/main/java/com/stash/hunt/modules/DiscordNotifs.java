@@ -18,6 +18,7 @@ import net.minecraft.text.TextColor;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.stash.hunt.Utils.sendWebhook;
 
@@ -133,7 +134,7 @@ public class DiscordNotifs extends Module
     private long delayTimer = 0;
     private int lastQueuePos;
     private final Queue<String> messageQueue = new LinkedList<String>();
-    private final Set<GameProfile> playersInRange = new HashSet<>();
+    private final Set<GameProfile> playersInRange = ConcurrentHashMap.newKeySet();
 
     @EventHandler
     private void onTick(TickEvent.Post event)

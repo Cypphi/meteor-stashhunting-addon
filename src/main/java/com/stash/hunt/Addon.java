@@ -20,6 +20,8 @@ public class Addon extends MeteorAddon {
 
     public final Settings settings = new Settings();
 
+//    public static boolean hwid_checked = false;
+
     @Override
     public void onInitialize() {
         LOG.info("Initializing Jefff Mod");
@@ -36,6 +38,9 @@ public class Addon extends MeteorAddon {
 //        Modules.get().add(new AutoTrade());
 //        Modules.get().add(new XPBot());
 //        Modules.get().add(new UnknownAccountNotifier());
+//
+//        Modules.get().add(new Test());
+//        Modules.get().add(new LavaFiller());
 
         Modules.get().add(new NoJumpDelay());
         Modules.get().add(new GrimAirPlace());
@@ -47,7 +52,7 @@ public class Addon extends MeteorAddon {
 //        Modules.get().add(new StashMoverListener());
 //        Modules.get().add(new PacketGrimFly());
         Modules.get().add(new AutoEXPPlus());
-//        Modules.get().add(new LavaESP());
+//        Modules.get().add(new YRelog());
 
         boolean baritoneLoaded = checkModLoaded("baritone", "baritone-meteor");
         boolean xaeroWorldMapLoaded = checkModLoaded("xaeroworldmap");
@@ -61,6 +66,8 @@ public class Addon extends MeteorAddon {
             {
                 Modules.get().add(new BetterStashFinder());
                 Modules.get().add(new OldChunkNotifier());
+//                Modules.get().add(new LavaESP());
+                Modules.get().add(new TrailMaker());
             }
             if (baritoneLoaded)
             {

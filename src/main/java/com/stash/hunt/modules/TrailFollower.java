@@ -533,7 +533,7 @@ public class TrailFollower extends Module
                 break;
             }
             case YAWLOCK: {
-                mc.player.setYaw(smoothRotation(getActualYaw(mc.player.getYaw()), targetYaw));
+                mc.player.setYaw(Utils.smoothRotation(getActualYaw(mc.player.getYaw()), targetYaw, rotateScaling.get()));
                 break;
             }
         }
@@ -618,7 +618,7 @@ public class TrailFollower extends Module
         // add chunks to the list
 
         double chunkAngle = Rotations.getYaw(pos);
-        double angleDiff = angleDifference(targetYaw, chunkAngle);
+        double angleDiff = Utils.angleDifference(targetYaw, chunkAngle);
         // was not able to add this before, but now can successfully filter out most other trails using the most recent chunk for pathing
         if (followingTrail && Math.abs(angleDiff) > maxTrailDeviation.get())
         {
@@ -712,18 +712,6 @@ public class TrailFollower extends Module
     private float getActualYaw(float yaw)
     {
         return (yaw % 360 + 360) % 360;
-    }
-
-    private float smoothRotation(double current, double target)
-    {
-        double difference = angleDifference(target, current);
-        return (float) (current + difference * rotateScaling.get());
-    }
-
-    private double angleDifference(double target, double current)
-    {
-        double diff = (target - current + 180) % 360 - 180;
-        return diff < -180 ? diff + 360 : diff;
     }
 
     private void log(String message)

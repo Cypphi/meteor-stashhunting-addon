@@ -38,8 +38,10 @@ public class Spiral extends SearchAreaMode
                     pd = GSON.fromJson(reader, PathingDataSpiral.class);
                     reader.close();
                     info("Loaded previously saved path, heading to where you left off.");
-                } catch (Exception ignored) {
-
+                } catch (IOException e) {
+                    info("Failed to load saved path, check logs for more details. Disabling module.");
+                    e.printStackTrace();
+                    this.disable();
                 }
             }
 
