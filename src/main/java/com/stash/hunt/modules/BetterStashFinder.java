@@ -188,26 +188,24 @@ public class BetterStashFinder extends Module
 
         RegistryKey<World> currentDimension = mc.world.getRegistryKey();
 
-        // Check that the chunk is in old chunks
-        if (onlyOldchunks.get())
-        {
-            ChunkPos chunkPos = chunk.chunkPos;
-            PaletteNewChunks paletteNewChunks = ModuleManager.getModule(PaletteNewChunks.class);
-            boolean is119NewChunk = paletteNewChunks
-                .isNewChunk(
-                    chunkPos.x,
-                    chunkPos.z,
-                    currentDimension
-                );
+        ChunkPos chunkPos = chunk.chunkPos;
+        PaletteNewChunks paletteNewChunks = ModuleManager.getModule(PaletteNewChunks.class);
+        boolean is119NewChunk = paletteNewChunks
+            .isNewChunk(
+                chunkPos.x,
+                chunkPos.z,
+                currentDimension
+            );
 
-            boolean is112OldChunk = ModuleManager.getModule(OldChunks.class)
-                .isOldChunk(
-                    chunkPos.x,
-                    chunkPos.z,
-                    currentDimension
-                );
-            if (is119NewChunk && !is112OldChunk) return;
-        }
+        boolean is112OldChunk = ModuleManager.getModule(OldChunks.class)
+            .isOldChunk(
+                chunkPos.x,
+                chunkPos.z,
+                currentDimension
+            );
+
+        // Check that the chunk is in old chunks
+        if (onlyOldchunks.get() && (is119NewChunk && !is112OldChunk)) return;
 
         for (BlockEntity blockEntity : event.chunk().getBlockEntities().values()) {
             if (!storageBlocks.get().contains(blockEntity.getType())) continue;
@@ -257,10 +255,15 @@ public class BetterStashFinder extends Module
                 {
                     if (advancedLogging.get())
                     {
+                        String chunkType = "";
+                        if (is119NewChunk && !is112OldChunk) chunkType = "new";
+                        else if (is119NewChunk && is112OldChunk) chunkType = "unfollowed 1.12";
+                        else if (!is119NewChunk && !is112OldChunk) chunkType = "1.19";
+                        else if (!is119NewChunk && is112OldChunk) chunkType = "followed 1.12";
                         String json = "{\"embeds\": [{" +
                             "\"title\": \"Stash Found!\"," +
                             "\"color\": 2154012," +
-                            "\"description\": \"Coordinates: || X: " + chunk.x + " Z: " + chunk.z + "||\"," +
+                            "\"description\": \"Coordinates: || X: " + chunk.x + " Z: " + chunk.z + "|| in " + chunkType + " chunks\"," +
                             "\"fields\": [" +
                                 "{" +
                                     "\"name\": \"Chests\"," +
