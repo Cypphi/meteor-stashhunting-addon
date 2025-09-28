@@ -149,6 +149,7 @@ public class ElytraFlyPlusPlus extends Module {
         .description("The start position to use when using a custom start position.")
         .defaultValue(new BlockPos(0,0,0))
         .visible(() -> bounce.get() && highwayObstaclePasser.get() && useCustomStartPos.get())
+        .onChanged(pos -> this.targetY.set(pos.getY()))
         .build()
     );
 
