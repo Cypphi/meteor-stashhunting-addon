@@ -4,10 +4,14 @@ import com.stash.hunt.Addon;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
+import meteordevelopment.meteorclient.events.game.OpenScreenEvent;
+import meteordevelopment.orbit.EventPriority;
 import net.lenni0451.lambdaevents.EventHandler;
 //import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.item.Item;
 import xaero.common.minimap.waypoints.Waypoint;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -79,6 +83,13 @@ public class BetterStashFinder extends Module
     private final Setting<Boolean> crafterInstantHit = sgGeneral.add(new BoolSetting.Builder()
         .name("crafter-instant-hit")
         .description("If a single auto crafter counts as a stash.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> disableOnTeleport = sgGeneral.add(new BoolSetting.Builder()
+        .name("disable-on-teleport-or-death")
+        .description("If on, will disable this module when respawning or teleporting to try to prevent coord leaks.")
         .defaultValue(false)
         .build()
     );
@@ -689,5 +700,18 @@ public class BetterStashFinder extends Module
             t.add(theme.label("Crafters:"));
             t.add(theme.label(chunk.crafters + ""));
         }
+    }
+
+    @meteordevelopment.orbit.EventHandler(priority = EventPriority.HIGH)
+    private void onOpenScreenEvent(OpenScreenEvent event) {
+        if (!(event.screen instanceof DeathScreen)) return;
+        if (!disableOnTeleport.get()) return;
+
+        this.toggle();
+    }
+
+    @meteordevelopment.orbit.EventHandler(priority = EventPriority.HIGH)
+    private void onPlayerMove(PlayerMoveEvent event) {
+        if (disableOnTeleport.get() && event.movement.horizontalLengthSquared() > 32 * 32) this.toggle();
     }
 }
