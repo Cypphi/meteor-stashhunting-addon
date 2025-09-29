@@ -20,14 +20,14 @@ public class AutoLogPlus extends Module
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Boolean> logOnY = sgGeneral.add(new BoolSetting.Builder()
-        .name("Log on Y")
+        .name("log-on-y")
         .description("Logs out if you are below a certain Y level.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Double> yLevel = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Auto Log out if below this Y")
+        .name("y-level")
         .defaultValue(256)
         .min(-128)
         .sliderRange(-128, 320)
@@ -36,22 +36,22 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Boolean> logArmor = sgGeneral.add(new BoolSetting.Builder()
-        .name("Log Armor")
-        .description("Logs out if you have no armor.")
+        .name("log-armor")
+        .description("Logs out if your armor goes below a certain durability amount.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> ignoreElytra = sgGeneral.add(new BoolSetting.Builder()
-        .name("Ignore Elytra")
-        .description("Ignores the elytra when checking for armor.")
+        .name("ignore-elytra")
+        .description("Ignores the elytra when checking armor durability.")
         .defaultValue(false)
         .visible(logArmor::get)
         .build()
     );
 
     private final Setting<Double> armorPercent = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Auto Log out if armor is below this percent")
+        .name("armor-percent")
         .defaultValue(5)
         .min(0)
         .sliderRange(0, 100)
@@ -60,14 +60,14 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Boolean> logPortal = sgGeneral.add(new BoolSetting.Builder()
-        .name("Log on Portal")
+        .name("log-on-portal")
         .description("Logs out if you are in a portal for too long.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Integer> portalTicks = sgGeneral.add(new IntSetting.Builder()
-        .name("Portal Ticks")
+        .name("portal-ticks")
         .description("The amount of ticks in a portal before you get kicked (It takes 80 ticks to go through a portal).")
         .defaultValue(30)
         .min(1)
@@ -77,14 +77,14 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Boolean> logPosition = sgGeneral.add(new BoolSetting.Builder()
-        .name("Log Position")
+        .name("log-position")
         .description("Logs out if you are within x blocks of this position. Y Position is not included")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<BlockPos> position = sgGeneral.add(new BlockPosSetting.Builder()
-        .name("Position")
+        .name("position")
         .description("The position to log out at. Y position is ignored.")
         .defaultValue(new BlockPos(0, 0, 0))
         .visible(logPosition::get)
@@ -92,7 +92,7 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Double> distance = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Distance")
+        .name("distance")
         .description("The distance from the position to log out at.")
         .defaultValue(100)
         .sliderRange(0, 1000)
@@ -101,14 +101,14 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Boolean> serverNotResponding = sgGeneral.add(new BoolSetting.Builder()
-        .name("Server Not Responding")
+        .name("server-not-responding")
         .description("Logs out if the server is not responding.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Double> serverNotRespondingSecs = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Seconds Not Responding")
+        .name("seconds-not-responding")
         .description("The amount of seconds the server is not responding before you log out.")
         .defaultValue(10)
         .min(1)
@@ -118,7 +118,7 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Boolean> reconnectAfterNotResponding = sgGeneral.add(new BoolSetting.Builder()
-        .name("Reconnect After Not Responding")
+        .name("reconnect-after-not-responding")
         .description("Reconnects after the server is not responding.")
         .defaultValue(false)
         .visible(serverNotResponding::get)
@@ -126,7 +126,7 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Double> secondsToReconnect = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Reconnect After Seconds")
+        .name("reconnect-seconds")
         .description("The amount of seconds to wait before reconnecting (Will temporarily overwrite Meteor's AutoReconnect.")
         .defaultValue(60)
         .min(10)
@@ -136,7 +136,7 @@ public class AutoLogPlus extends Module
     );
 
     private final Setting<Boolean> illegalDisconnect = sgGeneral.add(new BoolSetting.Builder()
-        .name("Illegal Disconnect")
+        .name("illegal-disconnect")
         .description("Disconnects from the server using the slot method.")
         .defaultValue(false)
         .build()

@@ -52,7 +52,7 @@ public class ChestIndex extends Module
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Integer> searchRange = sgGeneral.add(new IntSetting.Builder()
-        .name("Range")
+        .name("range")
         .description("Search chests within this range of the player.")
         .defaultValue(4)
         .min(1)
@@ -62,7 +62,7 @@ public class ChestIndex extends Module
     );
 
     private final Setting<Integer> delay = sgGeneral.add(new IntSetting.Builder()
-        .name("Delay")
+        .name("delay")
         .description("Delay in ticks between chest interactions.")
         .defaultValue(5)
         .min(0)
@@ -71,34 +71,34 @@ public class ChestIndex extends Module
     );
 
     private final Setting<DisplayType> displayType = sgGeneral.add(new EnumSetting.Builder<DisplayType>()
-        .name("Display Type (Only for Chat Output)")
+        .name("chat-output-type")
         .description("Unit to use when displaying results.")
         .defaultValue(DisplayType.ItemCount)
         .build()
     );
 
     private final Setting<Boolean> highlightSearched = sgGeneral.add(new BoolSetting.Builder()
-        .name("Highlight Searched Blocks")
+        .name("highlight-searched-blocks")
         .defaultValue(true)
         .build()
     );
 
     private final Setting<ShapeMode> shapeMode = sgGeneral.add(new EnumSetting.Builder<ShapeMode>()
-        .name("Box Mode")
+        .name("box-render-mode")
         .description("How the shape for the bounding box is rendered.")
         .defaultValue(ShapeMode.Both)
         .build()
     );
 
     private final Setting<SettingColor> sideColor = sgGeneral.add(new ColorSetting.Builder()
-        .name("Side Color")
+        .name("side-color")
         .description("The side color of the bounding box.")
         .defaultValue(new SettingColor(16,106,144, 100))
         .build()
     );
 
     private final Setting<SettingColor> lineColor = sgGeneral.add(new ColorSetting.Builder()
-        .name("Line Color")
+        .name("line-color")
         .description("The line color of the bounding box.")
         .defaultValue(new SettingColor(16,106,144, 255))
         .build()
@@ -118,7 +118,7 @@ public class ChestIndex extends Module
 
     public ChestIndex()
     {
-        super(Addon.CATEGORY, "ChestIndex", "Displays a total count of blocks in your chests (buggy and will probably break for lots of chests)");
+        super(Addon.CATEGORY, "chest-index", "Displays a total count of blocks in your chests (buggy and will probably break for lots of chests)");
         searched = new HashSet<BlockPos>();
         blocks = new HashMap<String, Integer>();
     }

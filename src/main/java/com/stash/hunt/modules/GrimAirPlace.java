@@ -21,10 +21,10 @@ import net.minecraft.util.math.Direction;
 
 public class GrimAirPlace extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgRange = settings.createGroup("Range");
+    private final SettingGroup sgRange = settings.createGroup("range");
 
     private final Setting<Integer> placeDelay = sgGeneral.add(new IntSetting.Builder()
-        .name("Place Delay")
+        .name("place-delay")
         .description("The delay in ticks between block placements.")
         .defaultValue(0)
         .build()

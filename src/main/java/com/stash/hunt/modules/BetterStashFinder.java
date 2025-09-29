@@ -123,14 +123,14 @@ public class BetterStashFinder extends Module
     );
 
     private final Setting<Boolean> sendWebhook = sgGeneral.add(new BoolSetting.Builder()
-        .name("Send Webhook")
+        .name("send-webhook")
         .description("Sends a webhook when a stash is found.")
         .defaultValue(false)
         .build()
     );
 
     public final Setting<String> webhookLink = sgGeneral.add(new StringSetting.Builder()
-        .name("Webhook Link")
+        .name("webhook-link")
         .description("A discord webhook link. Looks like this: https://discord.com/api/webhooks/webhookUserId/webHookTokenOrSomething")
         .defaultValue("")
         .visible(sendWebhook::get)
@@ -145,7 +145,7 @@ public class BetterStashFinder extends Module
     );
 
     public final Setting<Boolean> ping = sgGeneral.add(new BoolSetting.Builder()
-        .name("Ping For Stash Finder")
+        .name("ping-for-stash-finder")
         .description("Pings you for stash finder and base finder messages")
         .defaultValue(false)
         .visible(sendWebhook::get)
@@ -153,7 +153,7 @@ public class BetterStashFinder extends Module
     );
 
     public final Setting<String> discordId = sgGeneral.add(new StringSetting.Builder()
-        .name("Discord ID")
+        .name("discord-ID")
         .description("Your discord ID")
         .defaultValue("")
         .visible(() -> sendWebhook.get() && ping.get())

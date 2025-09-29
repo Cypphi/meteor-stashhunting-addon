@@ -40,42 +40,42 @@ public class HighlightOldLava extends Module
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Integer> searchAbove = sgGeneral.add(new IntSetting.Builder()
-        .name("Search Above")
+        .name("search-above")
         .description("Y value to look above")
         .sliderRange(0, 120)
         .build()
     );
 
     private final Setting<Integer> lavaHeight = sgGeneral.add(new IntSetting.Builder()
-        .name("Lava Height")
+        .name("lava-height")
         .description("The height of the lava to count as already loaded")
         .sliderRange(1, 30)
         .build()
     );
 
     private final Setting<Integer> renderDistance = sgGeneral.add(new IntSetting.Builder()
-        .name("Render Distance")
+        .name("render-distance")
         .description("How far away to render the blocks.")
         .sliderRange(0, 512)
         .build()
     );
 
     private final Setting<Boolean> disconnectOnFound = sgGeneral.add(new BoolSetting.Builder()
-        .name("Disconnect on Found")
+        .name("disconnect-on-found")
         .description("Will auto disconnect you if old lava is found. (Good for afking)")
         .defaultValue(false)
         .build()
     );
 
     public final Setting<Mode> logMode = sgGeneral.add(new EnumSetting.Builder<Mode>()
-        .name("Log Mode")
+        .name("log-mode")
         .description("How results are shown.")
         .defaultValue(Mode.Highlight)
         .build()
     );
 
     public final Setting<String> webhookLink = sgGeneral.add(new StringSetting.Builder()
-        .name("Webhook Link")
+        .name("webhook-link")
         .description("A discord webhook link. Looks like this: https://discord.com/api/webhooks/webhookUserId/webHookTokenOrSomething")
         .defaultValue("")
         .visible(() -> logMode.get() == Mode.LogWebhook || logMode.get() == Mode.Both)
@@ -83,7 +83,7 @@ public class HighlightOldLava extends Module
     );
 
     public final Setting<Boolean> ping = sgGeneral.add(new BoolSetting.Builder()
-        .name("Ping on Lava Found")
+        .name("ping-on-lava-found")
         .description("Pings you when lava that matches your search is found.")
         .defaultValue(false)
         .visible(() -> logMode.get() == Mode.LogWebhook || logMode.get() == Mode.Both)
@@ -91,7 +91,7 @@ public class HighlightOldLava extends Module
     );
 
     public final Setting<String> discordId = sgGeneral.add(new StringSetting.Builder()
-        .name("Discord ID")
+        .name("discord-ID")
         .description("Your discord ID")
         .defaultValue("")
         .visible(() -> logMode.get() == Mode.LogWebhook || logMode.get() == Mode.Both)
@@ -99,21 +99,21 @@ public class HighlightOldLava extends Module
     );
 
     private final Setting<ShapeMode> shapeMode = sgGeneral.add(new EnumSetting.Builder<ShapeMode>()
-        .name("Box Mode")
+        .name("box-render-mode")
         .description("How the shape for the bounding box is rendered.")
         .defaultValue(ShapeMode.Both)
         .build()
     );
 
     private final Setting<SettingColor> sideColor = sgGeneral.add(new ColorSetting.Builder()
-        .name("Side Color")
+        .name("side-color")
         .description("The side color of the bounding box.")
         .defaultValue(new SettingColor(16,106,144, 100))
         .build()
     );
 
     private final Setting<SettingColor> lineColor = sgGeneral.add(new ColorSetting.Builder()
-        .name("Line Color")
+        .name("line-color")
         .description("The line color of the bounding box.")
         .defaultValue(new SettingColor(16,106,144, 255))
         .build()
@@ -127,7 +127,7 @@ public class HighlightOldLava extends Module
 
     public HighlightOldLava()
     {
-        super(Addon.CATEGORY, "HighlightOldLava", "Highlights lava that has already flowed down");
+        super(Addon.CATEGORY, "highlight-old-lava", "Highlights lava that has already flowed down");
         oldLava = new HashSet<BlockPos>();
         loadedChunks = new HashSet<Vec3d>();
     }

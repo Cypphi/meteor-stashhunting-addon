@@ -28,42 +28,42 @@ public class DiscordNotifs extends Module
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<String> webhookURL = sgGeneral.add(new StringSetting.Builder()
-        .name("Webhook Link")
+        .name("webhook-link")
         .description("The discord webhook to use, looks like this: https://discord.com/api/webhooks/webhookUserId/webHookTokenOrSomething")
         .defaultValue("")
         .build()
     );
 
     private final Setting<Integer> delay = sgGeneral.add(new IntSetting.Builder()
-        .name("Message Delay (MS)")
+        .name("message-delay")
         .description("The delay between messages in milliseconds.")
         .defaultValue(2000)
         .build()
     );
 
     private final Setting<Boolean> queueMessages = sgGeneral.add(new BoolSetting.Builder()
-        .name("Queue Messages")
+        .name("queue-messages")
         .description("Will queue messages if they are sent too quickly. This could result in a long delay between messages being logged if the queue gets too big.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> timestamp = sgGeneral.add(new BoolSetting.Builder()
-        .name("Timestamp")
+        .name("timestamp")
         .description("If the message should have a timestamp.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> logAll = sgGeneral.add(new BoolSetting.Builder()
-        .name("All Messages")
+        .name("all-messages")
         .description("Logs all messages.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> connections = sgGeneral.add(new BoolSetting.Builder()
-        .name("Disconnect")
+        .name("disconnect")
         .description("If a message should be logged when leaving.")
         .defaultValue(false)
         .visible(() -> !logAll.get())
@@ -71,7 +71,7 @@ public class DiscordNotifs extends Module
     );
 
     private final Setting<Boolean> playerRange = sgGeneral.add(new BoolSetting.Builder()
-        .name("Player Range")
+        .name("player-range")
         .description("If a message should be logged when players enter/exit your render distance.")
         .defaultValue(false)
         .visible(() -> !logAll.get())
@@ -79,7 +79,7 @@ public class DiscordNotifs extends Module
     );
 
     private final Setting<Boolean> queue = sgGeneral.add(new BoolSetting.Builder()
-        .name("2b2t Queue")
+        .name("2b2t-queue")
         .description("If your position in queue should be logged.")
         .defaultValue(false)
         .visible(() -> !logAll.get())
@@ -87,7 +87,7 @@ public class DiscordNotifs extends Module
     );
 
     private final Setting<Boolean> whisper = sgGeneral.add(new BoolSetting.Builder()
-        .name("Whisper")
+        .name("whisper")
         .description("If whispers should be logged.")
         .defaultValue(false)
         .visible(() -> !logAll.get())
@@ -95,7 +95,7 @@ public class DiscordNotifs extends Module
     );
 
     private final Setting<Boolean> chat = sgGeneral.add(new BoolSetting.Builder()
-        .name("Chat Messages")
+        .name("chat-messages")
         .description("Logs chat messages")
         .defaultValue(false)
         .visible(() -> !logAll.get())
@@ -103,7 +103,7 @@ public class DiscordNotifs extends Module
     );
 
     private final Setting<Boolean> commands = sgGeneral.add(new BoolSetting.Builder()
-        .name("Commands/Client Info")
+        .name("commands-client-info")
         .description("Logs commands and most messages from clients.")
         .defaultValue(false)
         .visible(() -> !logAll.get())
@@ -111,7 +111,7 @@ public class DiscordNotifs extends Module
     );
 
     private final Setting<Boolean> deathMessages = sgGeneral.add(new BoolSetting.Builder()
-        .name("Death Messages")
+        .name("death-messages")
         .description("Logs death messages.")
         .defaultValue(false)
         .visible(() -> !logAll.get())
@@ -120,7 +120,7 @@ public class DiscordNotifs extends Module
 
     public DiscordNotifs()
     {
-        super(Addon.CATEGORY, "DiscordNotifs", "Sends notifications to a discord webhook.");
+        super(Addon.CATEGORY, "discord-notifs", "Sends notifications to a discord webhook.");
     }
 
     @Override

@@ -45,14 +45,14 @@ public class ElytraFlyPlusPlus extends Module {
     private final SettingGroup sgObstaclePasser = settings.createGroup("Obstacle Passer");
 
     private final Setting<Boolean> bounce = sgGeneral.add(new BoolSetting.Builder()
-        .name("Bounce")
+        .name("bounce")
         .description("Automatically does bounce efly.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> motionYBoost = sgGeneral.add(new BoolSetting.Builder()
-        .name("Motion Y Boost")
+        .name("motion-y-boost")
         .description("Greatly increases speed by cancelling Y momentum.")
         .defaultValue(false)
         .visible(bounce::get)
@@ -60,7 +60,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> onlyWhileColliding = sgGeneral.add(new BoolSetting.Builder()
-        .name("Only While Colliding")
+        .name("only-while-colliding")
         .description("Only enables motion y boost if colliding with a wall.")
         .defaultValue(true)
         .visible(() -> bounce.get() && motionYBoost.get())
@@ -68,7 +68,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> tunnelBounce = sgGeneral.add(new BoolSetting.Builder()
-        .name("Tunnel Bounce")
+        .name("tunnel-bounce")
         .description("Allows you to bounce in 1x2 tunnels. This should not be on if you are not in a tunnel.")
         .defaultValue(false)
         .visible(() -> bounce.get() && motionYBoost.get())
@@ -76,7 +76,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Double> speed = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Speed")
+        .name("speed")
         .description("The speed in blocks per second to keep you at.")
         .defaultValue(100.0)
         .sliderRange(20, 250)
@@ -85,7 +85,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> lockPitch = sgGeneral.add(new BoolSetting.Builder()
-        .name("Lock Pitch")
+        .name("lock-pitch")
         .description("Whether to lock your pitch when bounce is enabled.")
         .defaultValue(true)
         .visible(bounce::get)
@@ -93,7 +93,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Double> pitch = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Pitch")
+        .name("pitch")
         .description("The pitch to set when bounce is enabled.")
         .defaultValue(90.0)
         .sliderRange(-90, 90)
@@ -102,7 +102,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> lockYaw = sgGeneral.add(new BoolSetting.Builder()
-        .name("Lock Yaw")
+        .name("lock-yaw")
         .description("Whether to lock your yaw when bounce is enabled.")
         .defaultValue(false)
         .visible(bounce::get)
@@ -110,7 +110,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> useCustomYaw = sgGeneral.add(new BoolSetting.Builder()
-        .name("Use Custom Yaw")
+        .name("use-custom-yaw")
         .description("Enable this if you want to use a yaw that isn't a factor of 45. WARNING: This effects the baritone goal for obstacle passer, " +
             "use the default Rotations module if you only want a different yawlock.")
         .defaultValue(false)
@@ -119,7 +119,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Double> yaw = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Yaw")
+        .name("yaw")
         .description("The yaw to set when bounce is enabled. This is auto set to the closest 45 deg angle to you unless Use Custom Yaw is enabled. " +
             "WARNING: This effects the baritone goal for obstacle passer, use the default Rotations module if you only want a different yawlock.")
         .defaultValue(0.0)
@@ -129,7 +129,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> highwayObstaclePasser = sgObstaclePasser.add(new BoolSetting.Builder()
-        .name("Highway Obstacle Passer")
+        .name("highway-obstacle-passer")
         .description("Uses baritone to pass obstacles.")
         .defaultValue(false)
         .visible(bounce::get)
@@ -137,7 +137,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> useCustomStartPos = sgObstaclePasser.add(new BoolSetting.Builder()
-        .name("Use Custom Start Position")
+        .name("use-custom-start-position")
         .description("Enable and set this ONLY if you are on a ringroad or don't want to be locked to a highway. Otherwise (0, 0) is the start position and will be automatically used.")
         .defaultValue(false)
         .visible(() -> bounce.get() && highwayObstaclePasser.get())
@@ -145,7 +145,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<BlockPos> startPos = sgObstaclePasser.add(new BlockPosSetting.Builder()
-        .name("Start Position")
+        .name("start-position")
         .description("The start position to use when using a custom start position.")
         .defaultValue(new BlockPos(0,0,0))
         .visible(() -> bounce.get() && highwayObstaclePasser.get() && useCustomStartPos.get())
@@ -154,7 +154,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> awayFromStartPos = sgObstaclePasser.add(new BoolSetting.Builder()
-        .name("Away From Start Position")
+        .name("away-from-start-position")
         .description("If true, will go away from the start position instead of towards it. The start pos is (0,0) if it is not set to a custom start pos.")
         .defaultValue(true)
         .visible(() -> bounce.get() && highwayObstaclePasser.get())
@@ -162,7 +162,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Double> distance = sgObstaclePasser.add(new DoubleSetting.Builder()
-        .name("Distance")
+        .name("distance")
         .description("The distance to set the baritone goal for path realignment.")
         .defaultValue(10.0)
         .visible(() -> bounce.get() && highwayObstaclePasser.get())
@@ -170,7 +170,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Integer> targetY = sgObstaclePasser.add(new IntSetting.Builder()
-        .name("Y Level")
+        .name("y-level")
         .description("The Y level to bounce at. This must be correct or bounce will not start properly.")
         .defaultValue(120)
         .visible(() -> bounce.get() && highwayObstaclePasser.get())
@@ -178,7 +178,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> avoidPortalTraps = sgObstaclePasser.add(new BoolSetting.Builder()
-        .name("Avoid Portal Traps")
+        .name("avoid-portal-traps")
         .description("Will attempt to detect portal traps on chunk load and avoid them.")
         .defaultValue(false)
         .visible(() -> bounce.get() && highwayObstaclePasser.get())
@@ -186,7 +186,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Double> portalAvoidDistance = sgObstaclePasser.add(new DoubleSetting.Builder()
-        .name("Portal Avoid Distance")
+        .name("portal-avoid-distance")
         .description("The distance to a portal trap where the obstacle passer will takeover and go around it.")
         .defaultValue(20)
         .min(0)
@@ -196,7 +196,7 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Integer> portalScanWidth = sgObstaclePasser.add(new IntSetting.Builder()
-        .name("Portal Scan Width")
+        .name("portal-scan-width")
         .description("The width on the axis of the highway that will be scanned for portal traps.")
         .defaultValue(5)
         .min(3)
@@ -206,14 +206,14 @@ public class ElytraFlyPlusPlus extends Module {
     );
 
     private final Setting<Boolean> fakeFly = sgGeneral.add(new BoolSetting.Builder()
-        .name("Chestplate / Fakefly")
+        .name("chestplate-fakefly")
         .description("Lets you fly using a chestplate to use almost 0 elytra durability. Must have elytra in hotbar.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> toggleElytra = sgGeneral.add(new BoolSetting.Builder()
-        .name("Toggle Elytra")
+        .name("toggle-elytra")
         .description("Equips an elytra on activate, and a chestplate on deactivate.")
         .defaultValue(false)
         .visible(() -> !fakeFly.get())

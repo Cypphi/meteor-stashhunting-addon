@@ -73,8 +73,7 @@ public class AutoPortal extends Module {
     private int index = 0;
 
     public AutoPortal() {
-        super(Addon.CATEGORY, "AutoPortal", "For the Base Hunter who has places to be.");
-
+        super(Addon.CATEGORY, "auto-portal", "For the Base Hunter who has places to be.");
     }
 
     @Override

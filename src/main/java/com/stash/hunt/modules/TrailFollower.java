@@ -42,7 +42,7 @@ public class TrailFollower extends Module
 
     // TODO: Set this automatically either by looking at the rate of chunk loads or by using yaw instead of block pos so size doesnt negatively effect result
     public final Setting<Integer> maxTrailLength = sgGeneral.add(new IntSetting.Builder()
-        .name("Max Trail Length")
+        .name("max-trail-length")
         .description("The number of trail points to keep for the average. Adjust to change how quickly the average will change. More does not necessarily equal better because if the list is too long it will contain chunks behind you.")
         .defaultValue(20)
         .sliderRange(1, 100)
@@ -50,7 +50,7 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Integer> chunksBeforeStarting = sgGeneral.add(new IntSetting.Builder()
-        .name("Chunks Before Starting")
+        .name("chunks-before-starting")
         .description("Useful for afking looking for a trail. The amount of chunks before it gets detected as a trail.")
         .defaultValue(10)
         .sliderRange(1, 50)
@@ -58,7 +58,7 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Integer> chunkConsiderationWindow = sgGeneral.add(new IntSetting.Builder()
-        .name("Chunk Timeframe")
+        .name("chunk-timeframe")
         .description("The amount of time in seconds that the chunks must be found in before starting.")
         .defaultValue(5)
         .sliderRange(1, 20)
@@ -66,14 +66,14 @@ public class TrailFollower extends Module
     );
 
     public final Setting<TrailEndBehavior> trailEndBehavior = sgGeneral.add(new EnumSetting.Builder<TrailEndBehavior>()
-        .name("Trail End Behavior")
+        .name("trail-end-behavior")
         .description("What to do when the trail ends.")
         .defaultValue(TrailEndBehavior.DISABLE)
         .build()
     );
 
     public final Setting<Double> trailEndYaw = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Trail End Yaw")
+        .name("trail-end-yaw")
         .description("The direction to go after the trail is abandoned.")
         .defaultValue(0.0)
         .sliderRange(0.0, 359.9)
@@ -94,21 +94,21 @@ public class TrailFollower extends Module
     }
 
     public final Setting<OverworldFlightMode> overworldFlightMode = sgGeneral.add(new EnumSetting.Builder<OverworldFlightMode>()
-        .name("Overworld Flight Mode")
+        .name("overworld-flight-mode")
         .description("Choose how TrailFollower flies in Overworld. If other is selected then nothing will be automatically enabled, instead just your yaw will be changed to point towards the trail.")
         .defaultValue(OverworldFlightMode.PITCH40)
         .build()
     );
 
     public final Setting<NetherPathMode> netherPathMode = sgGeneral.add(new EnumSetting.Builder<NetherPathMode>()
-        .name("Nether Path Mode")
+        .name("nether-path-mode")
         .description("Choose how TrailFollower does baritone pathing in Nether. If other is selected then nothing will be automatically enabled, instead just your yaw will be changed to point towards the trail.")
         .defaultValue(NetherPathMode.AVERAGE)
         .build()
     );
 
     public final Setting<Boolean> pitch40Firework = sgGeneral.add(new BoolSetting.Builder()
-        .name("Auto Firework")
+        .name("auto-firework")
         .description("Uses a firework automatically if your velocity is too low.")
         .defaultValue(true)
         .visible(() -> overworldFlightMode.get() == OverworldFlightMode.PITCH40)
@@ -116,7 +116,7 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Double> rotateScaling = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Rotate Scaling")
+        .name("rotate-scaling")
         .description("Scaling of how fast the yaw changes. 1 = instant, 0 = doesn't change")
         .defaultValue(0.1)
         .sliderRange(0.0, 1.0)
@@ -124,14 +124,14 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Boolean> oppositeDimension = sgGeneral.add(new BoolSetting.Builder()
-        .name("Opposite Dimension")
+        .name("opposite-dimension")
         .description("Follows trails from the opposite dimension (Requires that you've already loaded the other dimension with XP).")
         .defaultValue(false)
         .build()
     );
 
     public final Setting<Boolean> autoElytra = sgGeneral.add(new BoolSetting.Builder()
-        .name("[Baritone] Auto Start Baritone Elytra")
+        .name("auto-start-baritone-elytra")
         .description("Starts baritone elytra for you.")
         .defaultValue(false)
         .build()
@@ -140,7 +140,7 @@ public class TrailFollower extends Module
     private final SettingGroup sgAdvanced = settings.createGroup("Advanced", false);
 
     public final Setting<Double> pathDistance = sgAdvanced.add(new DoubleSetting.Builder()
-        .name("Path Distance")
+        .name("path-distance")
         .description("The distance to add trail positions in the direction the player is facing. (Ignored when following overworld from nether)")
         .defaultValue(500)
         .sliderRange(100, 2000)
@@ -149,14 +149,14 @@ public class TrailFollower extends Module
     );
 
     public final Setting<FollowMode> flightMethod = sgAdvanced.add(new EnumSetting.Builder<FollowMode>()
-        .name("Flight Method")
+        .name("flight-method")
         .description("Decided how the goals will be used. Leave this on AUTO unless you want to use yaw lock in the nether for example.")
         .defaultValue(FollowMode.AUTO)
         .build()
     );
 
     public final Setting<Double> startDirectionWeighting = sgAdvanced.add(new DoubleSetting.Builder()
-        .name("Start Direction Weight")
+        .name("start-direction-weight")
         .description("The weighting of the direction the player is facing when starting the trail. 0 for no weighting (not recommended) 1 for max weighting (will take a bit for direction to change)")
         .defaultValue(0.5)
         .min(0)
@@ -165,14 +165,14 @@ public class TrailFollower extends Module
     );
 
     public final Setting<DirectionWeighting> directionWeighting = sgAdvanced.add(new EnumSetting.Builder<DirectionWeighting>()
-        .name("Direction Weighting")
+        .name("direction-weighting")
         .description("How the chunks found should be weighted. Useful for path splits. Left will weight chunks to the left of the player higher, right will weigh chunks to the right higher, and none will be in the middle/random. ")
         .defaultValue(DirectionWeighting.NONE)
         .build()
     );
 
     public final Setting<Integer> directionWeightingMultiplier = sgAdvanced.add(new IntSetting.Builder()
-        .name("Direction Weighting Multiplier")
+        .name("direction-weighting-multiplier")
         .description("The multiplier for how much weight should be given to chunks in the direction specified. Values are capped to be in the range [2, maxTrailLength].")
         .defaultValue(2)
         .min(2)
@@ -182,14 +182,14 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Boolean> only112 = sgAdvanced.add(new BoolSetting.Builder()
-        .name("Follow Only 1.12")
+        .name("follow-only-1.12")
         .description("Will only follow 1.12 chunks and will ignore other ones.")
         .defaultValue(false)
         .build()
     );
 
     public final Setting<Double> chunkFoundTimeout = sgAdvanced.add(new DoubleSetting.Builder()
-        .name("Chunk Found Timeout")
+        .name("chunk-found-timeout")
         .description("The amount of MS without a chunk found to trigger circling.")
         .defaultValue(1000 * 5)
         .min(1000)
@@ -198,7 +198,7 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Double> circlingDegPerTick = sgAdvanced.add(new DoubleSetting.Builder()
-        .name("Circling Degrees Per Tick")
+        .name("Circling-degrees-per-tick")
         .description("The amount of degrees to change per tick while circling.")
         .defaultValue(2.0)
         .min(1.0)
@@ -207,7 +207,7 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Double> trailTimeout = sgAdvanced.add(new DoubleSetting.Builder()
-        .name("Trail Timeout")
+        .name("trail-timeout")
         .description("The amount of MS without a chunk found to stop following the trail.")
         .defaultValue(1000 * 30)
         .min(1000 * 10)
@@ -216,7 +216,7 @@ public class TrailFollower extends Module
     );
     // added trail deviation slider now that baritone is locked to trail pathing
     public final Setting<Double> maxTrailDeviation = sgAdvanced.add(new DoubleSetting.Builder()
-        .name("Max Trail Deviation")
+        .name("max-trail-deviation")
         .description("Maximum allowed angle (in degrees) from the original trail direction. Helps avoid switching to intersecting trails.")
         .defaultValue(180.0)
         .min(1.0)
@@ -225,7 +225,7 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Integer> chunkCacheLength = sgAdvanced.add(new IntSetting.Builder()
-        .name("Chunk Cache Length")
+        .name("chunk-cache-length")
         .description("The amount of chunks to keep in the cache. (Won't be applied until deactivating)")
         .defaultValue(100_000)
         .sliderRange(0, 10_000_000)
@@ -233,14 +233,14 @@ public class TrailFollower extends Module
     );
 
     public final Setting<String> webhookLink = sgGeneral.add(new StringSetting.Builder()
-        .name("Webhook Link")
+        .name("webhook-link")
         .description("Will send all updates to the webhook link. Leave blank to disable.")
         .defaultValue("")
         .build()
     );
 
     public final Setting<Integer> baritoneUpdateTicks = sgAdvanced.add(new IntSetting.Builder()
-        .name("[Baritone] Baritone Path Update Ticks")
+        .name("baritone-path-update-ticks")
         .description("The amount of ticks between updates to the baritone goal. Low values may cause high instability.")
         .defaultValue(5 * 20) // 5 seconds
         .sliderRange(20, 30 * 20)
@@ -248,7 +248,7 @@ public class TrailFollower extends Module
     );
 
     public final Setting<Boolean> debug = sgAdvanced.add(new BoolSetting.Builder()
-        .name("Debug")
+        .name("debug")
         .description("Debug mode.")
         .defaultValue(false)
         .build()
@@ -345,7 +345,7 @@ public class TrailFollower extends Module
                     if (!pitch40UtilModule.isActive()) {
                         pitch40UtilModule.toggle();
                         if (pitch40Firework.get()) {
-                            Setting<Boolean> setting = ((Setting<Boolean>) pitch40UtilModule.settings.get("Auto Firework"));
+                            Setting<Boolean> setting = ((Setting<Boolean>) pitch40UtilModule.settings.get("auto-firework"));
                             info("Auto Firework enabled, if you want to change the velocity threshold or the firework cooldown check the settings under Pitch40Util.");
                             oldAutoFireworkValue = setting.get();
                             setting.set(true);
@@ -406,7 +406,7 @@ public class TrailFollower extends Module
                     if (pitch40UtilModule.isActive()) {
                         pitch40UtilModule.toggle();
                     }
-                    ((Setting<Boolean>) pitch40UtilModule.settings.get("Auto Firework")).set(oldAutoFireworkValue);
+                    ((Setting<Boolean>) pitch40UtilModule.settings.get("auto-firework")).set(oldAutoFireworkValue);
                 }
                 break;
             }
@@ -524,8 +524,6 @@ public class TrailFollower extends Module
                     }
                     if (autoElytra.get() && (BaritoneAPI.getProvider().getPrimaryBaritone().getElytraProcess().currentDestination() == null))
                     {
-                        // TODO: Fix this
-                        log("The auto elytra mode is broken right now. If it's not working just turn it off and manually use #elytra to start.");
                         BaritoneAPI.getSettings().elytraTermsAccepted.value = true;
                         BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute("elytra");
                     }

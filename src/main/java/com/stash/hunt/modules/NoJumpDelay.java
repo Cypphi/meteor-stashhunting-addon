@@ -9,7 +9,7 @@ public class NoJumpDelay extends Module
     {
         super(
             Addon.CATEGORY,
-            "NoJumpDelay",
+            "no-jump-delay",
             "Removes the delay between jumps."
         );
     }
