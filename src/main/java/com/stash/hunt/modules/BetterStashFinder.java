@@ -76,6 +76,13 @@ public class BetterStashFinder extends Module
         .build()
     );
 
+    private final Setting<Boolean> crafterInstantHit = sgGeneral.add(new BoolSetting.Builder()
+        .name("crafter-instant-hit")
+        .description("If a single auto crafter counts as a stash.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<Boolean> ignoreTrialChambers = sgGeneral.add(new BoolSetting.Builder()
         .name("ignore-trial-chambers")
         .description("Attempts to ignore trial chambers, but may cause false negatives if someone made their base to look like a trial chamber.")
@@ -225,9 +232,10 @@ public class BetterStashFinder extends Module
             else if (blockEntity instanceof AbstractFurnaceBlockEntity) chunk.furnaces++;
             else if (blockEntity instanceof DispenserBlockEntity) chunk.dispensersDroppers++;
             else if (blockEntity instanceof HopperBlockEntity) chunk.hoppers++;
+            else if (blockEntity instanceof CrafterBlockEntity) chunk.crafters++;
         }
 
-        if ((chunk.getTotal() >= minimumStorageCount.get()) || (shulkerInstantHit.get() && chunk.shulkers > 0)) {
+        if ((chunk.getTotal() >= minimumStorageCount.get()) || (shulkerInstantHit.get() && chunk.shulkers > 0) || (crafterInstantHit.get() && chunk.crafters > 0)) {
             Chunk prevChunk = null;
             int i = chunks.indexOf(chunk);
 
@@ -298,6 +306,11 @@ public class BetterStashFinder extends Module
                                 "{" +
                                     "\"name\": \"Furnaces\"," +
                                     "\"value\": " + chunk.furnaces + "," +
+                                    "\"inline\": true" +
+                                "}," +
+                                "{" +
+                                    "\"name\": \"Crafters\"," +
+                                    "\"value\": " + chunk.crafters + "," +
                                     "\"inline\": true" +
                                 "}" +
                             "]" +
@@ -550,6 +563,7 @@ public class BetterStashFinder extends Module
         if (chunk.hoppers > 0) waypointName += "H:" + chunk.hoppers;
         if (chunk.dispensersDroppers > 0) waypointName += "D:" + chunk.dispensersDroppers;
         if (chunk.furnaces > 0) waypointName += "F:" + chunk.furnaces;
+        if (chunk.crafters > 0) waypointName += "A:" + chunk.crafters;
         return waypointName;
     }
 
@@ -579,7 +593,7 @@ public class BetterStashFinder extends Module
 
         public ChunkPos chunkPos;
         public transient int x, z;
-        public int chests, barrels, shulkers, enderChests, furnaces, dispensersDroppers, hoppers;
+        public int chests, barrels, shulkers, enderChests, furnaces, dispensersDroppers, hoppers, crafters;
 
         public Chunk(ChunkPos chunkPos) {
             this.chunkPos = chunkPos;
@@ -593,19 +607,19 @@ public class BetterStashFinder extends Module
         }
 
         public int getTotal() {
-            return chests + barrels + shulkers + enderChests + furnaces + dispensersDroppers + hoppers;
+            return chests + barrels + shulkers + enderChests + furnaces + dispensersDroppers + hoppers + crafters;
         }
 
         public void write(Writer writer) throws IOException {
             sb.setLength(0);
             sb.append(x).append(',').append(z).append(',');
-            sb.append(chests).append(',').append(barrels).append(',').append(shulkers).append(',').append(enderChests).append(',').append(furnaces).append(',').append(dispensersDroppers).append(',').append(hoppers).append('\n');
+            sb.append(chests).append(',').append(barrels).append(',').append(shulkers).append(',').append(enderChests).append(',').append(furnaces).append(',').append(dispensersDroppers).append(',').append(hoppers).append(',').append(crafters).append('\n');
             writer.write(sb.toString());
         }
 
         public boolean countsEqual(Chunk c) {
             if (c == null) return false;
-            return chests != c.chests || barrels != c.barrels || shulkers != c.shulkers || enderChests != c.enderChests || furnaces != c.furnaces || dispensersDroppers != c.dispensersDroppers || hoppers != c.hoppers;
+            return chests != c.chests || barrels != c.barrels || shulkers != c.shulkers || enderChests != c.enderChests || furnaces != c.furnaces || dispensersDroppers != c.dispensersDroppers || hoppers != c.hoppers || crafters != c.crafters;
         }
 
         @Override
@@ -670,6 +684,10 @@ public class BetterStashFinder extends Module
 
             t.add(theme.label("Hoppers:"));
             t.add(theme.label(chunk.hoppers + ""));
+            t.row();
+
+            t.add(theme.label("Crafters:"));
+            t.add(theme.label(chunk.crafters + ""));
         }
     }
 }
