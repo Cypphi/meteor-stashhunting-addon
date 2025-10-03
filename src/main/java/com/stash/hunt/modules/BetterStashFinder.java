@@ -7,12 +7,10 @@ import com.google.gson.GsonBuilder;
 import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
 import meteordevelopment.meteorclient.events.game.OpenScreenEvent;
 import meteordevelopment.orbit.EventPriority;
-import net.lenni0451.lambdaevents.EventHandler;
-//import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.item.Item;
+import net.minecraft.util.math.Vec3d;
 import xaero.common.minimap.waypoints.Waypoint;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.gui.GuiTheme;
@@ -183,8 +181,11 @@ public class BetterStashFinder extends Module
         super(Addon.CATEGORY, "better-stash-finder", "Meteors StashFinder but with more features.");
     }
 
+    private Vec3d lastPosition = null;
+
     @Override
     public void onActivate() {
+        lastPosition = null;
         XaeroPlus.EVENT_BUS.register(this);
         load();
     }
@@ -712,6 +713,10 @@ public class BetterStashFinder extends Module
 
     @meteordevelopment.orbit.EventHandler(priority = EventPriority.HIGH)
     private void onPlayerMove(PlayerMoveEvent event) {
-        if (disableOnTeleport.get() && event.movement.horizontalLengthSquared() > 32 * 32) this.toggle();
+        if (lastPosition != null)
+        {
+            if (disableOnTeleport.get() && mc.player.squaredDistanceTo(lastPosition) > 16 * 16) this.toggle();
+        }
+        lastPosition = mc.player.getPos();
     }
 }
