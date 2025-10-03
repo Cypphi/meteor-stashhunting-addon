@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -21,9 +22,10 @@ public class EntityMixin
     @Shadow
     protected UUID uuid;
 
+    @Unique
     ElytraFlyPlusPlus efly = Modules.get().get(ElytraFlyPlusPlus.class);
 
-    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/Entity;getPose()Lnet/minecraft/entity/EntityPose;", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "getPose()Lnet/minecraft/entity/EntityPose;", cancellable = true)
     private void getPose(CallbackInfoReturnable<EntityPose> cir)
     {
         if (efly != null && efly.enabled() && this.uuid == mc.player.getUuid())
@@ -32,7 +34,7 @@ public class EntityMixin
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/Entity;isSprinting()Z", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "isSprinting()Z", cancellable = true)
     private void isSprinting(CallbackInfoReturnable<Boolean> cir)
     {
         if (efly != null && efly.enabled() && this.uuid == mc.player.getUuid())
