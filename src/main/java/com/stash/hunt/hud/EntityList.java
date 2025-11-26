@@ -31,15 +31,6 @@ public class EntityList extends HudElement {
         .build()
     );
 
-    private final Setting<Integer> range = sgGeneral.add(new IntSetting.Builder()
-        .name("range")
-        .description("Maximum distance to show entities.")
-        .defaultValue(64)
-        .min(8)
-        .sliderMax(256)
-        .build()
-    );
-
     private final Setting<Boolean> gradient = sgGeneral.add(new BoolSetting.Builder()
         .name("gradient")
         .description("Enable vertical gradient color.")
@@ -87,13 +78,7 @@ public class EntityList extends HudElement {
             return;
         }
 
-        List<Entity> entities = mc.world.getEntitiesByClass(
-            Entity.class,
-            mc.player.getBoundingBox().expand(range.get()),
-            entity -> true
-        );
-
-        for (Entity e : entities) {
+        for (Entity e : mc.world.getEntities()) {
             if (e == mc.player || e.isRemoved()) continue;
 
             String name = e.hasCustomName()
