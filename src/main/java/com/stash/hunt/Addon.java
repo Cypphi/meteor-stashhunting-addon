@@ -1,6 +1,6 @@
 package com.stash.hunt;
 
-import com.stash.hunt.hud.EntityListHUD;
+import com.stash.hunt.hud.EntityList;
 import com.stash.hunt.hud.Weather;
 import com.stash.hunt.modules.*;
 import com.stash.hunt.modules.searcharea.SearchArea;
@@ -84,7 +84,7 @@ public class Addon extends MeteorAddon {
 
         Hud.get().register(Weather.INFO);
 
-        Hud.get().register(EntityListHUD.INFO);
+        Hud.get().register(EntityList.INFO);
 
     }
 

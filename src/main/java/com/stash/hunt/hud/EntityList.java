@@ -12,12 +12,12 @@ import net.minecraft.entity.Entity;
 
 import java.util.*;
 
-public class EntityListHUD extends HudElement {
+public class EntityList extends HudElement {
     public static final HudElementInfo INFO = new HudElementInfo<>(
         Addon.HUD_GROUP,
         "EntityList",
         "Shows nearby entities in the HUD like in RusherHack",
-        EntityListHUD::new
+        EntityList::new
     );
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -73,7 +73,7 @@ public class EntityListHUD extends HudElement {
 
     private final Map<String, Integer> entityCounts = new HashMap<>();
 
-    public EntityListHUD() {
+    public EntityList() {
         super(INFO);
     }
 
