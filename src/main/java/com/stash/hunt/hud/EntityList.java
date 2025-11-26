@@ -130,11 +130,4 @@ public class EntityList extends HudElement {
             currentY += lineHeight;
         }
     }
-
-    private void drawCentered(HudRenderer renderer, String text, Color color) {
-        double width = renderer.textWidth(text, true, scale.get());
-        double height = renderer.textHeight(true, scale.get());
-        setSize(width, height);
-        renderer.text(text, x, y, color, true, scale.get());
-    }
 }
