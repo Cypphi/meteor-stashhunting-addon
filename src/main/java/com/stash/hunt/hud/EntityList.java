@@ -78,9 +78,7 @@ public class EntityList extends HudElement {
         for (Entity e : mc.world.getEntities()) {
             if (e == mc.player || e.isRemoved()) continue;
 
-            String name = e.hasCustomName()
-                ? e.getCustomName().getString()
-                : e.getType().getName().getString();
+            String name = e.getName().getString();
 
             entityCounts.merge(name, 1, Integer::sum);
         }
