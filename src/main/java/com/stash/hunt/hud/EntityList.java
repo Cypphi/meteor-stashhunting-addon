@@ -73,10 +73,7 @@ public class EntityList extends HudElement {
         entityCounts.clear();
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world == null || mc.player == null) {
-            drawCentered(renderer, "No Entities", Color.WHITE);
-            return;
-        }
+        if (mc.world == null || mc.player == null) return;
 
         for (Entity e : mc.world.getEntities()) {
             if (e == mc.player || e.isRemoved()) continue;
@@ -88,10 +85,7 @@ public class EntityList extends HudElement {
             entityCounts.merge(name, 1, Integer::sum);
         }
 
-        if (entityCounts.isEmpty()) {
-            drawCentered(renderer, "No Entities Found", Color.WHITE);
-            return;
-        }
+        if (entityCounts.isEmpty()) return;
 
         List<Map.Entry<String, Integer>> entries = new ArrayList<>(entityCounts.entrySet());
         entries.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
