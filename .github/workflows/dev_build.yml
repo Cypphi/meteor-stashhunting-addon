@@ -20,8 +20,9 @@ jobs:
               run: ./gradlew build
             - name: Extract Mod Version
               run: |
-                  VERSION=$(grep "mod_version" gradle.properties | cut -d'=' -f2)
-                  echo "VERSION=$VERSION" >> $GITHUB_ENV
+                  run: |
+                      VERSION=$(grep "mod_version" gradle.properties | cut -d'=' -f2 | cut -d'-' -f1)
+                      echo "VERSION=$VERSION" >> $GITHUB_ENV
             - name: Get Fabric Jar Filename
               run: echo "NAME=jefff-mod-${{ env.VERSION }}-${{ env.MINECRAFT_VERSION }}" >> $GITHUB_ENV
             - name: Rename Output File
