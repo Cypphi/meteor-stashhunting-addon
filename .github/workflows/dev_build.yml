@@ -25,8 +25,6 @@ jobs:
                       echo "VERSION=$VERSION" >> $GITHUB_ENV
             - name: Get Fabric Jar Filename
               run: echo "NAME=jefff-mod-${{ env.VERSION }}-${{ env.MINECRAFT_VERSION }}" >> $GITHUB_ENV
-            - name: Rename Output File
-              run: mv ./build/libs/*.jar ./build/libs/${{ env.NAME }}.jar
             - name: Release
               uses: ncipollo/release-action@v1
               with:
