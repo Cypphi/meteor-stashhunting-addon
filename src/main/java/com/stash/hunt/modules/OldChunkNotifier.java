@@ -125,7 +125,7 @@ public class OldChunkNotifier extends Module {
     public final Setting<DimensionMode> dimensionMode = sgGeneral.add(new EnumSetting.Builder<DimensionMode>()
         .name("dimension-mode")
         .description("Choose where the module will detect old chunks.")
-        .defaultValue(DimensionMode.BOTH)
+        .defaultValue(DimensionMode.All)
         .build()
     );
 
